@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+      <link href="icon.png" rel="shortcut icon">
+  <meta charset="UTF-8">
+  <title>My BulletJournal</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="main-container">
+    <div class="journal">
+      <!-- هدر با تاریخ و لینک به تقویم -->
+       <header class="journal-header">
+      <h1>My BulletJournal</h1>
+      <div class="date-navigation">
+        <span id="current-date">امروز: ۱۴۰۲/۰۶/۲۰</span>
+        <a href="#" id="calendar-link"> مشاهده تقویم و اضافه‌کردن کار برای روزهای آینده</a>
+      </div>
+      <!-- بخش جستجو -->
+      <div class="search-container">
+  <input type="text" id="task-search" placeholder="جستجو ...">
+  <button id="clear-search" style="display: none;">✕</button>
+  <div id="search-results-container"></div>
+</div>
+    </header>
+      
+      <!-- فرم جدید برای افزودن تسک -->
+      <form id="task-form">
+        <input type="text" id="task-input" placeholder="اضافه‌کردن کار جدید..." required>
+        
+        <!-- انتخاب‌گر سطح سختی -->
+        <select id="difficulty-select">
+          <option value="easy">آسان</option>
+          <option value="medium" selected>متوسط</option>
+          <option value="hard">سخت</option>
+        </select>
+
+        <!-- گزینه‌های جدید برای عادت -->
+        <label class="habit-label">
+          <input type="checkbox" id="habit-checkbox"> عادت
+        </label>
+        <div id="habit-end-date-container" style="display: none;">
+          <input type="text" id="habit-end-date" placeholder="تاریخ پایان (۱۴۰۲/۱۲/۲۹)">
+        </div>
+
+        <button type="submit">+</button>
+
+        
+        <!-- در فرم اصلی تسک -->
+<div id="reminder-container" style="display: none; width: 100%; margin-top: 10px;">
+  <label class="reminder-label">
+    <input type="checkbox" id="reminder-checkbox"> فعال‌سازی یادآوری
+  </label>
+  <select id="reminder-time" style="margin-right: 10px; padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
+    <option value="0">در روز موعد</option>
+    <option value="1">یک روز قبل</option>
+    <option value="2">دو روز قبل</option>
+  </select>
+</div>
+
+<!-- در فرم مودال تسک -->
+<div id="modal-reminder-container" style="display: none; width: 100%; margin-top: 10px;">
+  <label class="reminder-label">
+    <input type="checkbox" id="modal-reminder-checkbox"> فعال‌سازی یادآوری
+  </label>
+  <select id="modal-reminder-time" style="margin-right: 10px; padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
+    <option value="0">در روز موعد</option>
+    <option value="1">یک روز قبل</option>
+    <option value="2">دو روز قبل</option>
+  </select>
+</div>
+
+
+
+      </form>
+
+      <!-- بخش تسک‌های امروز -->
+      <section class="tasks-section">
+        <h2>کارهای امروز</h2>
+        <div id="habit-tasks-container">
+          <h3>عادت‌ها</h3>
+          <ul id="habit-task-list"></ul>
+        </div>
+        <ul id="today-task-list"></ul>
+      </section>
+
+      <!-- بخش تسک‌های آینده -->
+      <section class="tasks-section">
+        <h2>کارهای روزهای آینده</h2>
+        <ul id="upcoming-task-list"></ul>
+      </section>
+    </div>
+
+   <!-- ستون سمت چپ - نمودارهای پیشرفت -->
+  <div class="progress-container">
+    <div class="progress-card">
+      <h2>پیشرفت امروز</h2>
+      <div class="progress-chart">
+        <canvas id="today-chart" width="150" height="150"></canvas>
+        <div class="progress-text" id="today-progress-text">0%</div>
+      </div>
+    </div>
+    
+    <div class="progress-card">
+      <h2>پیشرفت این هفته</h2>
+      <div class="progress-chart">
+        <canvas id="week-chart" width="150" height="150"></canvas>
+        <div class="progress-text" id="week-progress-text">0%</div>
+      </div>
+    </div>
+
+    <!-- نمودارهای پیشرفت عادت‌ها -->
+    <div class="habits-progress-container">
+      <h2>پیشرفت عادت‌ها</h2>
+      <div id="habits-charts-container"></div>
+    </div>
+  </div>
+
+  <!-- مودال برای نمایش جزئیات روز -->
+  <div id="day-modal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2 id="modal-date">تسک‌های تاریخ</h2>
+      <ul id="modal-task-list"></ul>
+      <form id="modal-task-form">
+        <input type="text" id="modal-task-input" placeholder="افزودن کار برای این تاریخ...">
+        <select id="modal-difficulty-select">
+          <option value="easy">آسان</option>
+          <option value="medium" selected>متوسط</option>
+          <option value="hard">سخت</option>
+        </select>
+        <input type="hidden" id="modal-task-date">
+        <button type="submit">+</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="calendar-modal" class="modal">
+    <div class="modal-content calendar">
+      <span class="close">&times;</span>
+      <div class="calendar-header">
+        <button id="prev-month">&lt;</button>
+        <h2 id="current-month-year">مرداد ۱۴۰۲</h2>
+        <button id="next-month">&gt;</button>
+      </div>
+      <div class="calendar-grid" id="calendar-days"></div>
+      <div class="calendar-footer">
+        <button id="fix-calendar-btn">تنظیم روز شروع ماه</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="fix-calendar-modal" class="modal">
+    <div class="modal-content">
+      <span class="close" data-modal="fix-calendar-modal">&times;</span>
+      <h2>تنظیم روز شروع هفته برای این ماه</h2>
+      <p>لطفاً روزی که این ماه از آن شروع می‌شود را انتخاب کنید:</p>
+      <div class="weekday-selector">
+        <button data-day="0">شنبه</button>
+        <button data-day="1">یکشنبه</button>
+        <button data-day="2">دوشنبه</button>
+        <button data-day="3">سه‌شنبه</button>
+        <button data-day="4">چهارشنبه</button>
+        <button data-day="5">پنجشنبه</button>
+        <button data-day="6">جمعه</button>
+      </div>
+      <div class="modal-buttons">
+        <button type="button" class="cancel-btn" data-modal="fix-calendar-modal">انصراف</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="edit-modal" class="modal">
+    <div class="modal-content">
+      <span class="close" data-modal="edit-modal">&times;</span>
+      <h2>ویرایش کار</h2>
+      <form id="edit-task-form">
+        <input type="text" id="edit-task-input">
+        <input type="text" id="edit-task-date" dir="ltr">
+        <select id="edit-difficulty-select">
+          <option value="easy">آسان</option>
+          <option value="medium">متوسط</option>
+          <option value="hard">سخت</option>
+        </select>
+        <input type="hidden" id="edit-task-id">
+        <div class="modal-buttons">
+          <button type="submit">ذخیره</button>
+          <button type="button" class="cancel-btn" data-modal="edit-modal">انصراف</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="delete-modal" class="modal">
+    <div class="modal-content">
+      <span class="close" data-modal="delete-modal">&times;</span>
+      <h2>حذف کار</h2>
+      <p>آیا از حذف این کار مطمئن هستید؟</p>
+      <div class="modal-buttons">
+        <button id="confirm-delete" class="delete-btn">حذف</button>
+        <button type="button" class="cancel-btn" data-modal="delete-modal">انصراف</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="post">
+                 <center> Created with ♡ by <a href="https://github.com/Narxesx">Narjes. N</a> </center>
+ </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/jalali-moment/dist/jalali-moment.browser.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

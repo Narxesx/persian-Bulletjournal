@@ -1,0 +1,1219 @@
+@font-face {
+    font-family: 'DelbarBold';
+    src: url('Delbarbold.ttf') format('truetype');
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #f7f5f0;
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+  direction: rtl;
+  font-family: 'DelbarBold', Arial, sans-serif;
+}
+
+/* صفحه اصلی */
+.journal {
+   background: white;
+  padding: 20px 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  width: 500px;
+  position: relative;
+  flex: 1;
+}
+
+/* هدر */
+.journal-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eee;
+  text-align: center;
+}
+
+.journal-header h1 {
+  font-size: 24px;
+  color: #521d67;
+  margin-bottom: 10px;
+  order: 1; 
+}
+
+.date-navigation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  order: 2; 
+}
+
+#current-date {
+  font-size: 18px;
+  color: #dcb62c;
+  margin-bottom: 5px;
+}
+
+#calendar-link {
+  font-size: 15px;
+  color: #4caf50;
+  text-decoration: none;
+}
+
+#calendar-link:hover {
+  text-decoration: underline;
+}
+
+/* بخش جستجو */
+.search-container {
+  position: relative;
+  margin: 15px 0;
+  width: 100%;
+  order: 3;
+}
+
+#task-search {
+  width: 100%;
+  padding: 10px 40px 10px 10px;
+  border: 2px solid #dcb62c;
+  border-radius: 10px;
+  outline: none;
+  font-family: 'DelbarBold', Arial, sans-serif;
+  direction: rtl;
+  font-size: 14px;
+}
+
+#task-search:focus {
+  border-color: #521d67;
+  box-shadow: 0 0 5px rgba(82, 29, 103, 0.3);
+}
+
+#clear-search {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+#clear-search:hover {
+  background: #f0f0f0;
+  color: #333;
+}
+
+/* استایل برای نتایج جستجو */
+#search-results-container {
+  margin-top: 10px;
+  max-height: 300px;
+  overflow-y: auto;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  display: none;
+}
+
+.search-result-item {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.search-result-item:hover {
+  background-color: #f5f5f5;
+}
+
+.search-result-item:last-child {
+  border-bottom: none;
+}
+
+.search-result-info {
+  flex: 1;
+}
+
+.search-result-text {
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.search-result-details {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #666;
+}
+
+.search-result-date {
+  background: #e8f5e9;
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: #2e7d32;
+}
+
+.search-result-difficulty {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-left: 5px;
+}
+
+.search-result-difficulty.easy {
+  background-color: #4caf50;
+}
+
+.search-result-difficulty.medium {
+  background-color: #ff9800;
+}
+
+.search-result-difficulty.hard {
+  background-color: #f44336;
+}
+
+.search-result-habit {
+  background: #e3f2fd;
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: #1976d2;
+  font-size: 11px;
+}
+
+.search-result-completed {
+  color: #4caf50;
+  font-size: 12px;
+}
+
+.search-results-info {
+  padding: 15px;
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+}
+
+.search-results-info.hidden {
+  display: none;
+}
+
+.search-highlight {
+  background-color: #fff59d !important;
+  border: 1px solid #ffd54f !important;
+}
+
+/* هایلایت در تقویم */
+.calendar-day.search-highlight {
+  background-color: #fff59d !important;
+  border: 2px solid #ffd54f !important;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.no-results {
+  text-align: center;
+  padding: 20px;
+  color: #888;
+  font-size: 14px;
+}
+
+/* فرم ورودی تسک جدید */
+#task-form {
+  display: flex;
+  margin-bottom: 20px;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+#task-input {
+  flex: 1;
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  outline: none;
+  font-family: 'DelbarBold', Arial, sans-serif;
+  min-width: 200px;
+}
+
+#difficulty-select {
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  outline: none;
+  font-family: 'DelbarBold', Arial, sans-serif;
+  width: 100px;
+}
+
+#task-form button {
+  padding: 0 15px;
+  font-size: 20px;
+  border: none;
+  border-radius: 10px;
+  background: #4caf50;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-family: 'DelbarBold', Arial, sans-serif;
+}
+
+#task-form button:hover {
+  background: #43a047;
+}
+
+/* بخش‌های تسک */
+.tasks-section {
+  margin-bottom: 25px;
+}
+
+.tasks-section h2 {
+  font-size: 16px;
+  margin-bottom: 15px;
+  color: #444;
+  padding-bottom: 5px;
+  border-bottom: 1px dashed #ddd;
+}
+
+/* استایل برای بخش عادت‌ها */
+#habit-tasks-container {
+  margin-bottom: 20px;
+  border-bottom: 1px dashed #ddd;
+  padding-bottom: 15px;
+}
+
+#habit-tasks-container h3 {
+  font-size: 14px;
+  color: #2196f3;
+  margin-bottom: 10px;
+}
+
+.habit-task {
+  border-left-color: #2196f3 !important;
+}
+
+/* استایل برای کادر تاریخ پایان عادت */
+#habit-end-date-container {
+  margin-top: 10px;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+#habit-end-date {
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  outline: none;
+  font-family: 'DelbarBold', Arial, sans-serif;
+  width: 100%;
+}
+
+/* لیست تسک‌ها */
+#today-task-list, #upcoming-task-list, #habit-task-list {
+  list-style: none;
+  padding: 0;
+}
+
+/* هر تسک */
+.task-item {
+  display: flex;
+  align-items: center;
+  background: #fafafa;
+  padding: 12px 15px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  transition: all 0.2s ease;
+  border-left: 4px solid #4caf50;
+  justify-content: space-between;
+}
+
+.difficulty-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-left: 10px;
+  flex-shrink: 0;
+}
+
+/* متن تسک */
+.task-text {
+  cursor: pointer;
+  padding: 5px 0;
+  text-align: right;
+  flex: 1;
+}
+
+/* تاریخ تسک */
+.task-date {
+  font-size: 12px;
+  color: #888;
+  margin-left: 10px;
+}
+
+.task-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: 10px;
+  order: 1;
+}
+
+/* برای تسک‌های آینده - چیدمان جدید */
+.upcoming-task {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+}
+
+.upcoming-task .task-actions {
+  order: 1;
+  margin-left: 0;
+  margin-right: 10px;
+}
+
+.upcoming-task .task-text {
+  order: 2;
+  flex: 1;
+  text-align: right;
+  padding: 0 10px;
+}
+
+.upcoming-task .task-date {
+  order: 3;
+  margin-left: 10px;
+  margin-right: 0;
+}
+
+.upcoming-task .difficulty-dot {
+  order: 4;
+  margin-left: 10px;
+  margin-right: 0;
+}
+
+/* وقتی موس روی تسک میرود */
+.task-item:hover {
+  background: #eaeaea;
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* نقطه رنگی سطح سختی - تغییر موقعیت به سمت راست */
+.difficulty-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 10px;
+  flex-shrink: 0;
+  right: 5px;
+}
+
+.hard-difficulty {
+  background-color: #f44336;
+}
+
+.medium-difficulty {
+  background-color: #ff9800;
+}
+
+.easy-difficulty {
+  background-color: #4caf50;
+}
+
+.habit-dot {
+  background-color: #2196f3;
+}
+
+/* متن تسک */
+.task-text {
+  flex: 1;
+  cursor: pointer;
+  padding: 5px 0;
+  text-align: right;
+}
+
+/* تاریخ تسک */
+.task-date {
+  font-size: 12px;
+  color: #888;
+  margin-left: 10px;
+  order: 2;
+}
+
+/* برای تسک‌های آینده */
+.upcoming-task .task-actions {
+  order: 1;
+}
+
+.upcoming-task .task-date {
+  order: 2;
+}
+
+.upcoming-task .task-text {
+  order: 3;
+}
+
+/* استایل یکسان برای دکمه‌های عمل */
+.task-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: 10px;
+}
+
+.action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  transition: all 0.2s;
+  font-family: 'DelbarBold', Arial, sans-serif;
+}
+
+.edit-btn {
+  background-color: rgba(33, 150, 243, 0.1);
+  color: #2196f3;
+}
+
+.edit-btn:hover {
+  background-color: rgba(33, 150, 243, 0.2);
+}
+
+.delete-btn {
+  background-color: rgba(211, 47, 47, 0.1);
+  color: #d32f2f;
+}
+
+.delete-btn:hover {
+  background-color: rgba(211, 47, 47, 0.2);
+}
+
+.calendar-link {
+  background-color: rgba(156, 39, 176, 0.1);
+  color: #9c27b0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: all 0.2s;
+  font-size: 16px;
+}
+
+.calendar-link:hover {
+  background-color: rgba(156, 39, 176, 0.2);
+  color: #7b1fa2;
+}
+
+/* تسک کامل شده */
+.completed .task-text {
+  text-decoration: line-through;
+  color: #777;
+}
+
+/* مودال */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 2000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 3% auto;
+  padding: 20px;
+  border-radius: 15px;
+  width: 80%;
+  max-width: 600px;
+  position: relative;
+  z-index: 3001;
+  font-family: 'DelbarBold', Arial, sans-serif;
+}
+
+/* استایل جدید برای تقویم کوچکتر */
+.calendar {
+  max-width: 400px !important;
+  margin: 2% auto !important;
+  padding: 15px !important;
+}
+
+.close {
+  color: #aaa;
+  float: left;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  position: absolute;
+  top: 3px;
+  left: 15px;
+}
+
+.close:hover {
+  color: black;
+}
+
+/* تقویم */
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 0 10px;
+}
+
+.calendar-header button {
+  background: #4caf50;
+  color: white;
+  border: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-family: 'DelbarBold', Arial, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  margin: 0 10px;
+}
+
+.calendar-header button:hover {
+  background: #388e3c;
+  transform: scale(1.1);
+}
+
+.calendar-header h2 {
+  margin: 0 10px;
+  font-size: 16px;
+  color: #333;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+}
+
+.calendar-day {
+  padding: 5px;
+  text-align: center;
+  border-radius: 5px;
+  cursor: pointer;
+  position: relative;
+  min-height: 40px;
+  font-size: 14px;
+  font-family: 'DelbarBold', Arial, sans-serif;
+}
+
+.calendar-day:hover {
+  background-color: #ffebee;
+}
+
+.today {
+  background-color: #4caf50;
+  color: white;
+}
+
+.has-tasks::after {
+  content: "";
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+    width: 6px;
+  height: 6px;
+  background-color: #ff9800;
+  border-radius: 50%;
+}
+
+
+/* بهبود نمایش تسک‌ها در تقویم */
+.day-tasks {
+  font-size: 9px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 3px;
+  direction: rtl;
+  text-align: center;
+  width: 100%;
+  color: #333;
+}
+
+.day-tasks.completed {
+  text-decoration: line-through;
+  color: #777;
+}
+
+
+
+
+/* فرم در مودال */
+#modal-task-form {
+  display: flex;
+  margin-top: 15px;
+  gap: 10px;
+}
+
+#modal-task-input {
+  flex: 1;
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  outline: none;
+  font-family: 'DelbarBold', Arial, sans-serif;
+}
+
+#modal-difficulty-select {
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  outline: none;
+  font-family: 'DelbarBold', Arial, sans-serif;
+  width: 100px;
+}
+
+#modal-task-form button {
+  padding: 0 15px;
+  font-size: 20px;
+  border: none;
+  border-radius: 10px;
+  background: #4caf50;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-family: 'DelbarBold', Arial, sans-serif;
+  height: 40px;
+}
+
+#modal-task-form button:hover {
+  background: #43a047;
+}
+
+/* استایل برای مودال‌های ویرایش و حذف */
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  gap: 10px;
+}
+
+.modal-buttons button {
+  padding: 10px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'DelbarBold', Arial, sans-serif;
+}
+
+.modal-buttons button[type="submit"] {
+  background: #4caf50;
+  color: white;
+}
+
+.cancel-btn {
+  background: #f1f1f1;
+  color: #333;
+}
+
+.delete-btn {
+  background: #d32f2f;
+  color: white;
+}
+
+/* کانتینر اصلی */
+.main-container {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  flex-direction: row;
+}
+
+/* استایل‌های کارت‌های پیشرفته */
+.progress-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 300px; 
+  flex-shrink: 0;
+}
+
+.progress-card {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  text-align: center;
+  flex: 1; 
+  min-width: 150px;
+}
+
+.progress-card h2 {
+  font-size: 16px;
+  margin-bottom: 15px;
+  color: #444;
+}
+
+.progress-chart {
+  position: relative;
+  display: inline-block;
+}
+
+.progress-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+/* استایل‌های جدید برای مودال تنظیم تقویم */
+.weekday-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 20px 0;
+  justify-content: center;
+}
+
+.weekday-selector button {
+  padding: 8px;
+  border: 1px solid #ddd;
+  background: #f9f9f9;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 70px;
+  font-size: 12px;
+  font-family: 'DelbarBold', Arial, sans-serif;
+}
+
+.weekday-selector button:hover {
+  background: #e0e0e0;
+}
+
+.weekday-selector button:active {
+  background: #d0d0d0;
+}
+
+.calendar-footer {
+  margin-top: 15px;
+  text-align: center;
+}
+
+#fix-calendar-btn {
+  background: #ff9800;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  font-family: 'DelbarBold', Arial, sans-serif;
+}
+
+#fix-calendar-btn:hover {
+  background: #f57c00;
+}
+
+/* استایل‌های فیلدهای ویرایش */
+#edit-task-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+#edit-task-form input, #edit-task-form select {
+  padding: 10px;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  outline: none;
+  font-family: 'DelbarBold', Arial, sans-serif;
+}
+
+.empty {
+  background-color: #f5f5f5;
+  cursor: default;
+}
+
+.weekday {
+  font-weight: bold;
+  background-color: #efeaf0; 
+  cursor: default;
+  color: #444444; 
+}
+
+.weekday:hover {
+  background-color: #e0e0e0;
+}
+
+/* استایل‌های برچسب عادت */
+.habit-label {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  gap: 5px;
+}
+
+/* برای نمایش بهتر عادت‌ها در بالای لیست */
+.tasks-section {
+  display: flex;
+  flex-direction: column;
+}
+
+#habit-tasks-container {
+  order: 1;
+}
+
+#today-task-list {
+  order: 2;
+}
+
+/* استایل‌های نمودارهای پیشرفت عادت‌ها */
+.habits-progress-container {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  width: 100%;
+}
+
+.habits-progress-container h2 {
+  font-size: 16px;
+  margin-bottom: 20px;
+  color: #444;
+  padding-bottom: 5px;
+  border-bottom: 1px dashed #ddd;
+  text-align: center;
+}
+
+#habits-charts-container {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.habit-chart-item {
+  background: #fafafa;
+  border-radius: 10px;
+  padding: 15px;
+  border-left: 4px solid #2196f3;
+}
+
+.habit-chart-header {
+  margin-bottom: 15px;
+  text-align: right;
+}
+
+.habit-chart-name {
+  font-weight: bold;
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.habit-chart-dates {
+  font-size: 13px;
+  color: #666;
+  border-bottom: 1px dashed #ddd;
+  padding-bottom: 8px;
+}
+
+.habit-chart-progress {
+  width: 100%;
+}
+
+.habit-chart-stats {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 12px;
+  color: #666;
+}
+
+.habit-chart-bar-container {
+  width: 100%;
+  height: 25px;
+  background: #e0e0e0;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+}
+
+.habit-chart-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #2196f3, #1976d2);
+  border-radius: 12px;
+  transition: width 0.5s ease;
+  position: relative;
+}
+
+.habit-chart-bar-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 12px;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+/* استایل برای زمانی که هیچ عادتی وجود ندارد */
+.habits-empty-state {
+  text-align: center;
+  padding: 30px;
+  color: #888;
+}
+
+.habits-empty-state i {
+  font-size: 48px;
+  margin-bottom: 15px;
+  display: block;
+  color: #ccc;
+}
+
+/* استایل‌های واکنش‌گرا برای صفحه‌های کوچک */
+@media (max-width: 768px) {
+  body {
+    padding: 20px;
+  }
+  
+  .main-container {
+    flex-direction: column;
+  }
+  
+  .journal {
+    width: 100%;
+    padding: 15px;
+  }
+  
+  .progress-container {
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  
+  .progress-card {
+    width: 48%;
+  }
+  
+  #task-form {
+    flex-direction: column;
+  }
+  
+  #task-input, #difficulty-select, #habit-end-date {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .progress-container {
+    flex-direction: column;
+  }
+  
+  .progress-card {
+    width: 100%;
+  }
+  
+  .calendar-header button {
+    margin: 0 5px;
+  }
+  
+  .modal-content {
+    width: 95%;
+    padding: 15px;
+  }
+  
+  .calendar {
+    max-width: 95% !important;
+  }
+}
+
+/* اضافه کردن استایل برای تسک‌های انجام شده در تقویم */
+.calendar-day.completed-task::after {
+  content: "✓";
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  color: #4caf50;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.reminder-label {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  gap: 5px;
+  margin-bottom: 8px;
+}
+
+#reminder-time, #modal-reminder-time {
+  padding: 8px;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  outline: none;
+  font-family: 'DelbarBold', Arial, sans-serif;
+  margin-top: 5px;
+}
+
+.has-reminder {
+  border: 1px solid #ff9800 !important;
+}
+
+.reminder-icon {
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  font-size: 10px;
+}
+
+
+.main-container {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  flex-direction: row;
+  position: relative; 
+  min-height: 100vh;
+  padding-bottom: 70px; 
+}
+
+/* استایل برای پست پایین کانتینر */
+.post {
+  background: #fff;
+  padding: 20px;
+  line-height: 150%;
+  border-top: 1px solid #eee;
+  text-align: center;
+  position: absolute; 
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+  font-family: 'Courier New', Courier, Monaco, Consolas, monospace;
+  font-size: 13px;
+  color: #333;
+  direction: rtl; 
+  border-radius: 20px 20px 20px 20px; 
+  margin: 0 20px;
+}
+
+.post a{
+   color: #ae6894;
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  padding: 3px 6px;
+  border-radius: 4px;
+}
+
+.post .top a {
+  font-size: 13px;
+  color: #ae6894;
+  text-decoration: none;
+}
+
+.post .top a:hover {
+  text-decoration: underline;
+}
+
+.post .but a {
+  color: #666666;
+  font-weight: normal;
+  padding: 0px 10px 0px 5px;
+  text-decoration: none;
+}
+
+.post .but a:hover {
+  color: #333333;
+}
+
+
+@media (max-width: 968px) {
+  .main-container {
+    flex-direction: column;
+    padding-bottom: 60px;
+  }
+  
+  .post {
+    padding: 15px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .post {
+    padding: 12px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 968px) {
+  .main-container {
+    flex-direction: column; 
+  }
+  
+  .progress-container {
+    width: 100%;
+    flex-direction: row; 
+    flex-wrap: wrap;
+  }
+  
+  .progress-card {
+    flex: 1;
+    min-width: 150px;
+  }
+  
+  .journal {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .progress-container {
+    flex-direction: column; 
+  }
+  
+  .progress-card {
+    width: 100%;
+  }
+}
