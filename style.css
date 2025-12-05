@@ -1217,6 +1217,7 @@ body {
  .post {
     padding: 15px;
     font-size: 16px;
+    margin: 0 13px;
   }
 }
 
@@ -1243,6 +1244,7 @@ body {
   .post {
     padding: 15px;
     font-size: 16px;
+    margin: 0 13px;
   }
 }
 
@@ -1371,4 +1373,5 @@ body {
     font-size: 16px;
   }
 }
+
 
